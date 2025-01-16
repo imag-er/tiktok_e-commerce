@@ -1,8 +1,8 @@
 package main
 
 import (
+	user "github.com/imag-er/tiktok_e-commerce/src/user/kitex_gen/user/userservice"
 	"log"
-	user "user/kitex_gen/user/userservice"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module user
+module github.com/imag-er/tiktok_e-commerce/src/user
 
 go 1.23.4
 
