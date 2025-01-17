@@ -1,0 +1,25 @@
+services:
+  etcd:
+    image: bitnami/etcd:latest
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+    logging:
+      driver: "none"
+    
+  user:
+    build: ./user
+    ports:
+      - "10001:10001"
+    depends_on:
+      - etcd
+    
+  
+  api:
+    build: ./api
+    ports:
+      - "8888:8888"
+    depends_on:
+      - user
