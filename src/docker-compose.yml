@@ -1,25 +1,37 @@
 services:
   etcd:
     image: bitnami/etcd:latest
-    ports:
-      - "2379:2379"
-      - "2380:2380"
     environment:
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
       - ALLOW_NONE_AUTHENTICATION=yes
-    logging:
-      driver: "none"
-    
+      - ETCD_LOGGER=zap
+      - ETCD_LOG_LEVEL=error
+    networks:
+      - inner_network
+
   user:
-    build: ./user
-    ports:
-      - "10001:10001"
+    build: 
+      context: user
+    environment:
+      - ETCD_ENDPOINT=http://etcd:2379
+    networks:
+      - inner_network 
     depends_on:
       - etcd
     
-  
-  api:
-    build: ./api
-    ports:
-      - "8888:8888"
-    depends_on:
-      - user
+  # api:
+  #   build: 
+  #     context: api
+  #   environment:
+  #     - ETCD_ENDPOINT=http://etcd:2379
+  #   ports:
+  #     - "8888:8888"
+  #   networks:
+  #     - inner_network 
+  #   depends_on:
+  #     - etcd
+  #     - user
+
+networks:
+  inner_network:
