@@ -14,29 +14,6 @@ services:
     logging:
       driver: "none"
 
-  user:
-    build: 
-      context: user
-    environment:
-      - ETCD_ENDPOINT=http://etcd:2379
-    networks:
-      - inner_network 
-    depends_on:
-      - etcd
-    ports:
-      - "10001:10001"
-
-  # rpc_call:
-  #   build: 
-  #     context: rpc_call
-  #   environment:
-  #     - ETCD_ENDPOINT=http://etcd:2379
-  #   networks:
-  #     - inner_network 
-  #   depends_on:
-  #     - etcd
-  #     - user
-
   api:
     build: 
       context: api
@@ -61,6 +38,19 @@ services:
       - inner_network
     depends_on:
       - api
+
+  user:
+    build:
+      context: rpc/user
+      dockerfile: ../../docker/service.dockerfile 
+    environment:
+      - ETCD_ENDPOINT=http://etcd:2379
+    networks:
+      - inner_network 
+    ports:
+      - "10001:10001"
+    depends_on:
+      - etcd
 
 networks:
   inner_network:

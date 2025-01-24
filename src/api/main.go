@@ -16,8 +16,8 @@ import (
 	"github.com/cloudwego/kitex/pkg/discovery"
 	"github.com/hertz-contrib/cors"
 
-	"github.com/imag-er/tiktok_e-commerce/src/user/kitex_gen/user"
-	"github.com/imag-er/tiktok_e-commerce/src/user/kitex_gen/user/userservice"
+	"src/kitex_gen/user"
+	"src/kitex_gen/user/userservice"
 	etcd "github.com/kitex-contrib/registry-etcd"
 )
 
