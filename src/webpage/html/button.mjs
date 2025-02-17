@@ -1,6 +1,6 @@
 // 按钮样式变化逻辑，不包含请求逻辑
 
-import {apis, fetchApiData} from './request.mjs';
+import { apis, fetchApiData } from './request.mjs';
 
 const apiList = document.getElementById('api-list');
 
@@ -51,4 +51,4 @@ Object.keys(apis).forEach(apiName => {
 
 
 
-export {testApi}
+export { testApi }

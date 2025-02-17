@@ -9,7 +9,7 @@ export const apis = {
         contentType: 'none' // No content needed for GET
     },
     login: {
-        url: 'http://127.0.0.1:8888/api/user/login',
+        url: 'http://127.0.0.1:8888/login',
         method: "POST",
         arguments: { email: "admin", password: "admin" },
         contentType: 'form-data'

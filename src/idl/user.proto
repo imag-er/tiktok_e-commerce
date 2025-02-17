@@ -11,8 +11,11 @@ service UserService {
 
 message RegisterReq {
     string email = 1;
-    string password = 2;
-    string confirm_password = 3;
+    string username = 2;
+    string password = 3 ;
+    
+    // 在前端校验
+    // string confirm_password = 4;
 }
 
 message RegisterResp {

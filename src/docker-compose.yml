@@ -11,46 +11,55 @@ services:
       - inner_network
     ports:
       - "2379:2379"
-    logging:
-      driver: "none"
 
-  api:
-    build: 
-      context: api
+  # webpage:
+  #   image: nginx:latest
+  #   ports:  
+  #     - "80:80"
+  #   volumes:
+  #     - ./webpage/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./webpage/html:/html
+  #   networks:
+  #     - inner_network
+  #   # depends_on:
+  #   #   - api
+  
+  postgres:
+    image: postgres:14
+    restart: always
     environment:
-      - ETCD_ENDPOINT=http://etcd:2379
+        POSTGRES_USER: root
+        POSTGRES_PASSWORD: root
     ports:
-      - "8888:8888"
-    networks:
-      - inner_network 
-    depends_on:
-      - etcd
-      - user
-
-  webpage:
-    image: nginx:latest
-    ports:  
-      - "80:80"
+      - "5432:5432"
     volumes:
-      - ./webpage/nginx.conf:/etc/nginx/nginx.conf
-      - ./webpage/html:/html
+      - ./db:/var/lib/postgresql/data
     networks:
       - inner_network
-    depends_on:
-      - api
 
-  user:
-    build:
-      context: rpc/user
-      dockerfile: ../../docker/service.dockerfile 
-    environment:
-      - ETCD_ENDPOINT=http://etcd:2379
-    networks:
-      - inner_network 
-    ports:
-      - "10001:10001"
-    depends_on:
-      - etcd
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   ports:
+  #     - "5050:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: root
+  #     PGADMIN_DEFAULT_PASSWORD: root
+  #   restart: always
+  #   networks:
+  #     - inner_network
+    
+  # user:
+  #   build:
+  #     context: rpc/user
+  #     dockerfile: ../../docker/service.dockerfile 
+  #   environment:
+  #     - ETCD_ENDPOINT=http://etcd:2379
+  #   networks:
+  #     - inner_network 
+  #   ports:
+  #     - "10001:10001"
+  #   depends_on:
+  #     - etcd
 
 networks:
   inner_network:

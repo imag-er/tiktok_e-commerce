@@ -1,0 +1,15 @@
+
+services:
+  jaeger:
+    image: jaegertracing/jaeger:2.2.0
+    container_name: jaeger
+    ports:
+      - "5775:5775/udp" 
+      - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+    logging:
+      driver: none
+
+
+# http://localhost:16686

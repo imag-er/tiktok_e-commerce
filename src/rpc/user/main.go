@@ -17,21 +17,25 @@ func main() {
 	etcdAddr, exists := os.LookupEnv("ETCD_ENDPOINT")
 
 	if !exists {
-		etcdAddr = "http://etcd:2379"
+		etcdAddr = "http://127.0.0.1:2379"
+		// etcdAddr = "http://etcd:2379"
 	}
+
 
 	log.Println("ETCD_ENDPOINT is set to ", etcdAddr)
 
+	// connect to etcd
 	retryConfig := retry.NewRetryConfig(
 		retry.WithMaxAttemptTimes(10),
-		retry.WithObserveDelay(20*time.Second),
 		retry.WithRetryDelay(5*time.Second),
 	)
 	etcd, err := etcd.NewEtcdRegistryWithRetry([]string{etcdAddr}, retryConfig)
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatalln("连接到etcd失败 ",err.Error())
 	}
 
+
+	// create server
 	addr, _ := net.ResolveTCPAddr("tcp", ":10001")
 
 	svr := user.NewServer(
