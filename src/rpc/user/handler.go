@@ -36,13 +36,12 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.RegisterReq) (
 func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginReq) (resp *user.LoginResp, err error) {
 	log.Printf("User: %s login with passwd: %s\n", req.Email, req.Password)
 
-	// Check if user exists
-
 	var queryItem User
-	result := s.db.WithContext(ctx).Where("email = ?", req.Email).First(&queryItem)
+	// check email and password
+	result := s.db.WithContext(ctx).Where("email = ? AND password = ?", req.Email, req.Password).First(&queryItem)
 	if result.Error != nil {
 		return nil, fmt.Errorf("failed to find user: %w", result.Error)
 	}
 
-	return &user.LoginResp{UserId: int32(queryItem.ID)}, nil
+	return &user.LoginResp{UserId: queryItem.ID}, nil
 }

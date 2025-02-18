@@ -9,6 +9,7 @@ require (
 	github.com/hertz-contrib/cors v0.1.0
 	github.com/kitex-contrib/registry-etcd v0.2.5
 	google.golang.org/protobuf v1.36.3
+	gorm.io/driver/postgres v1.5.11
 )
 
 require (
@@ -18,8 +19,8 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	golang.org/x/crypto v0.22.0 // indirect
-	gorm.io/driver/postgres v1.5.11 // indirect
 )
 
 require (
