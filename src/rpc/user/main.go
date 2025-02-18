@@ -1,15 +1,17 @@
 package main
 
 import (
+	"log"
+	"net"
+	"os"
+	
+	user "src/kitex_gen/user/userservice"
+	"time"
+
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	server "github.com/cloudwego/kitex/server"
 	etcd "github.com/kitex-contrib/registry-etcd"
 	"github.com/kitex-contrib/registry-etcd/retry"
-	"log"
-	"net"
-	"os"
-	user "src/kitex_gen/user/userservice"
-	"time"
 )
 
 func main() {
@@ -21,7 +23,6 @@ func main() {
 		// etcdAddr = "http://etcd:2379"
 	}
 
-
 	log.Println("ETCD_ENDPOINT is set to ", etcdAddr)
 
 	// connect to etcd
@@ -31,15 +32,17 @@ func main() {
 	)
 	etcd, err := etcd.NewEtcdRegistryWithRetry([]string{etcdAddr}, retryConfig)
 	if err != nil {
-		log.Fatalln("连接到etcd失败 ",err.Error())
+		log.Fatalln("连接到etcd失败 ", err.Error())
 	}
-
 
 	// create server
 	addr, _ := net.ResolveTCPAddr("tcp", ":10001")
+	
+	userservice := new(UserServiceImpl)
+	userservice.db = InitGORM()
 
 	svr := user.NewServer(
-		new(UserServiceImpl),
+		userservice,
 		server.WithServiceAddr(addr),
 		server.WithRegistry(etcd),
 		server.WithServerBasicInfo(

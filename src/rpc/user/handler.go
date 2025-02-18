@@ -28,11 +28,21 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.RegisterReq) (
 	}
 
 	log.Printf("User registered: %s (%s)", req.Username, req.Email)
-	return &user.RegisterResp{UserId: int32(newUser.ID)}, nil
+
+	return &user.RegisterResp{UserId: newUser.ID}, nil
 
 }
 
 func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginReq) (resp *user.LoginResp, err error) {
 	log.Printf("User: %s login with passwd: %s\n", req.Email, req.Password)
-	return &user.LoginResp{UserId: 1}, nil
+
+	// Check if user exists
+
+	var queryItem User
+	result := s.db.WithContext(ctx).Where("email = ?", req.Email).First(&queryItem)
+	if result.Error != nil {
+		return nil, fmt.Errorf("failed to find user: %w", result.Error)
+	}
+
+	return &user.LoginResp{UserId: int32(queryItem.ID)}, nil
 }
