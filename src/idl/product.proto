@@ -9,6 +9,8 @@ service ProductCatalogService {
   rpc GetProduct(GetProductReq) returns (GetProductResp) {}
   rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {}
   rpc CreateProduct(CreateProductReq) returns (CreateProductResp) {}
+  rpc DeleteProduct(DeleteProductReq) returns (DeleteProductResp) {}
+
 }
 
 message ListProductsReq{
@@ -60,3 +62,12 @@ message CreateProductReq {
 message CreateProductResp {
   uint32 id = 1;
 }
+
+message DeleteProductReq {
+  uint32 id = 1;
+}
+
+message DeleteProductResp {
+  uint32 id = 2;
+}
+

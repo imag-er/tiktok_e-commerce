@@ -33,6 +33,16 @@ func main() {
 	/// 登录接口
 	h.POST("/login", authMiddleware.LoginHandler)
 	h.POST("/register", handler.Register);
+
+	/// 商品接口
+	h.Use(authMiddleware.MiddlewareFunc())
+    {
+		h.POST("/product", handler.CreateProduct)
+		h.DELETE("/product/:id", handler.DeleteProduct)
+		h.GET("/product/:id", handler.GetProduct)
+    }
+
+
 	/// api jwt
 	auth := h.Group("auth")
 	/// 刷新jwt

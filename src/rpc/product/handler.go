@@ -15,8 +15,17 @@ type ProductCatalogServiceImpl struct {
 
 // ListProducts implements the ProductCatalogServiceImpl interface.
 func (s *ProductCatalogServiceImpl) ListProducts(ctx context.Context, req *product.ListProductsReq) (resp *product.ListProductsResp, err error) {
-	// TODO: Your code here...
-	return
+	products := []*product.Product{}
+	result := s.db.WithContext(ctx).Find(&products)
+	if result.Error != nil {
+		return nil, fmt.Errorf("failed to list products: %w", result.Error)
+	}
+
+	return &product.ListProductsResp{
+		Products: products,
+	}, nil
+
+	
 }
 
 // GetProduct implements the ProductCatalogServiceImpl interface.
@@ -65,4 +74,15 @@ func (s *ProductCatalogServiceImpl) CreateProduct(ctx context.Context, req *prod
 		return nil, fmt.Errorf("failed to create product: %w", result.Error)
 	}
 	return &product.CreateProductResp{Id: tmp.Id}, nil
+}
+
+// DeleteProduct implements the ProductCatalogServiceImpl interface.
+func (s *ProductCatalogServiceImpl) DeleteProduct(ctx context.Context, req *product.DeleteProductReq) (resp *product.DeleteProductResp, err error) {
+	// delete product by id
+	result := s.db.WithContext(ctx).Delete(&product.Product{}, req.Id)
+	if result.Error != nil {
+		return nil, fmt.Errorf("failed to delete product: %w", result.Error)
+	}
+	return &product.DeleteProductResp{}, nil
+
 }
