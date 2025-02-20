@@ -50,11 +50,16 @@ func payloadFunc(data interface{}) jwt.MapClaims {
 }
 
 func identityHandler(ctx context.Context, c *app.RequestContext) interface{} {
-	claims := jwt.ExtractClaims(ctx, c)
-	return &def.User{
-		UserId: claims[def.IdentityKey].(uint32),
-	}
-
+    claims := jwt.ExtractClaims(ctx, c)
+    // 先断言为 float64，再转换为 uint32
+    userIdFloat, ok := claims[def.IdentityKey].(float64)
+    if !ok {
+        log.Printf("invalid user ID type: %T, expected float64", claims[def.IdentityKey])
+        return nil
+    }
+    return &def.User{
+        UserId: uint32(userIdFloat),
+    }
 }
 
 func authenticator(ctx context.Context, c *app.RequestContext) (interface{}, error) {
@@ -68,6 +73,7 @@ func authenticator(ctx context.Context, c *app.RequestContext) (interface{}, err
 		Password: loginVals.Password,
 	}
 
+	
 	resp, err := userservice.MustNewClient("user", client.WithResolver(def.EtcdResolver)).Login(ctx, &req)
 	if err != nil {
 		return nil, jwt.ErrFailedAuthentication
